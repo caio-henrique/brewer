@@ -32,7 +32,9 @@
 		<form method="GET" th:object="${cervejaFilter}">
 			<div class="row">
 				<div class="form-group  col-sm-6">
-					<label class="control-label" for="sku">SKU</label>
+					<label class="control-label" for="sku">
+						SKU
+					</label>
 					<input type="text" class="form-control" id="sku" autofocus="autofocus" th:field="*{sku}"/>
 				</div>
 				
@@ -95,8 +97,22 @@
 				<thead>
 					<tr>
 						<th class="table-cervejas-col-foto"></th>
-						<th class="table-cervejas-col-sku">SKU</th>
-						<th class="table-cervejas-col-nome">Nome</th>
+						<th class="table-cervejas-col-sku">
+							<a th:href="${pagina.urlOrdenada('sku')}" th:remove="${pagina.empty} ? tag">SKU
+								<span class="dropup" th:remove="${pagina.descendente('sku')} ? tag"
+									th:if="${pagina.ordenada('sku')}">
+									<span class="caret"></span>
+								</span>
+							</a>
+						</th>
+						<th class="table-cervejas-col-nome">
+							<a th:href="${pagina.urlOrdenada('nome')}" th:remove="${pagina.empty} ? tag">Nome
+								<span class="dropup" th:remove="${pagina.descendente('nome')} ? tag"
+									th:if="${pagina.ordenada('nome')}">
+									<span class="caret"></span>
+								</span>
+							</a>
+						</th>
 						<th class="table-cervejas-col-estilo">Estilo</th>
 						<th class="table-cervejas-col-origem">Origem</th>
 						<th class="table-cervejas-col-valor">Valor</th>
@@ -105,7 +121,7 @@
 				</thead>
 				
 				<tbody>
-					<tr th:each="cerveja : ${cervejas}">
+					<tr th:each="cerveja : ${pagina.conteudo}">
 						<td class="text-center">
 							<img th:src="@{/fotos/thumbnail.{foto}(foto=${cerveja.fotoOrMock})}" class="img-responsive"/>
 						</td>
@@ -123,11 +139,35 @@
 							</a>
 						</td>
 					</tr>
-					<tr th:if="${#lists.isEmpty(cervejas)}">
+					<tr th:if="${pagina.empty}">
 						<td colspan="7">Nenhuma cerveja encontrada</td>
 					</tr>
 				</tbody>
 			</table>
+		</div>
+		
+		<div class="col-sm-12 text-center" th:if="${not pagina.empty}">
+			<ul class="pagination pagination-sm" th:with="paginaAtual=${pagina.paginaAtual}">
+		    
+			    <li th:class="${pagina.first} ? disabled">
+			    	<a th:remove="${pagina.first} ? tag" th:href="${pagina.urlParaPagina(paginaAtual - 1)}" aria-label="Previous">
+			        	<span aria-hidden="true">&laquo;</span>
+			      	</a>
+			    </li>
+		    
+			    <th:block th:each="p : ${#numbers.sequence(1, pagina.totalPaginas)}" th:with="numeroPagina=${p - 1}">
+			    	<li th:class="${paginaAtual == numeroPagina} ? active">
+			    		<a th:href="${pagina.urlParaPagina(numeroPagina)}">[[${p}]]</a>
+			    	</li>
+			    </th:block>
+		    
+			    <li th:class="${pagina.last} ? disabled">
+			    	<a th:remove="${pagina.last} ? tag" th:href="${pagina.urlParaPagina(paginaAtual + 1)}" aria-label="Next">
+			        	<span aria-hidden="true">&raquo;</span>
+			      	</a>
+			    </li>
+		 	
+		 	</ul>
 		</div>
 	</div>
 
