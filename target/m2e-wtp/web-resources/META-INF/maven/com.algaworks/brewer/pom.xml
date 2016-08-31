@@ -33,7 +33,7 @@
 		<hibernate-validator.version>5.2.4.Final</hibernate-validator.version>
 		
 		<!-- Thymeleaf - Layout Dialect -->
-		<thymeleaf-layout-dialect.version>2.0.0-SNAPSHOT</thymeleaf-layout-dialect.version>
+		<thymeleaf-layout-dialect.version>2.0.0</thymeleaf-layout-dialect.version>
 		
 		<!-- Logging -->
 		<log4j.version>2.6</log4j.version>
@@ -51,6 +51,10 @@
 		<!-- thumbnailator - Gerar Thumbnail -->
  		<!-- https://github.com/coobird/thumbnailator -->
 		<thumbnailator.version>0.4.8</thumbnailator.version>
+		
+		<!-- Thymeleaf extras data attribute -->
+		<thymeleaf-extras-data-attribute.version>2.0.1</thymeleaf-extras-data-attribute.version>
+
 	</properties>
 	
 	<build>
@@ -137,6 +141,7 @@
     		<groupId>nz.net.ultraq.thymeleaf</groupId>
     		<artifactId>thymeleaf-layout-dialect</artifactId>
     		<version>${thymeleaf-layout-dialect.version}</version>
+    		<scope>compile</scope>
 		</dependency>
 		
 		<!-- Logging -->
@@ -144,21 +149,25 @@
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-slf4j-impl</artifactId>
 			<version>${log4j.version}</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
 			<version>${log4j.version}</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
 			<version>${log4j.version}</version>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>${jcl-over-slf4j.version}</version>
+			<scope>compile</scope>
 		</dependency>
 		
 		<!-- JPA / Hibernate -->
@@ -190,6 +199,7 @@
 		    <groupId>org.springframework.data</groupId>
 		    <artifactId>spring-data-jpa</artifactId>
 		    <version>${spring-data-jpa.version}</version>
+		    <scope>compile</scope>
 		</dependency>
 		
 		<!-- Jackson - JSON -->
@@ -208,17 +218,14 @@
 			<scope>compile</scope>
 		</dependency>
 		
+		<!-- Thymeleaf extras data attribute -->
+		<dependency>
+    		<groupId>com.github.mxab.thymeleaf.extras</groupId>
+    		<artifactId>thymeleaf-extras-data-attribute</artifactId>
+    		<version>${thymeleaf-extras-data-attribute.version}</version>
+    		<scope>compile</scope>
+		</dependency>
+
 	</dependencies>
-	
-	<repositories>
-		<repository>
-			<id>sonatype-nexus-snapshots</id>
-    		<name>Sonatype Nexus Snapshots</name>
-    		<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    		<snapshots>
-      			<enabled>true</enabled>
-    		</snapshots>
-		</repository>
-	</repositories>
-	
+
 </project>

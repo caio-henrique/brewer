@@ -2,7 +2,7 @@
 <html lang="pt" xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorator="'layout/LayoutPadrao'">
+	layout:decorate="~{layout/LayoutPadrao}">
 	
 <head>
 	<title>Pesquisa de cervejas</title>
@@ -98,20 +98,10 @@
 					<tr>
 						<th class="table-cervejas-col-foto"></th>
 						<th class="table-cervejas-col-sku">
-							<a th:href="${pagina.urlOrdenada('sku')}" th:remove="${pagina.empty} ? tag">SKU
-								<span class="dropup" th:remove="${pagina.descendente('sku')} ? tag"
-									th:if="${pagina.ordenada('sku')}">
-									<span class="caret"></span>
-								</span>
-							</a>
+							<brewer:order page="${pagina}" field="sku" text="SKU"/>
 						</th>
 						<th class="table-cervejas-col-nome">
-							<a th:href="${pagina.urlOrdenada('nome')}" th:remove="${pagina.empty} ? tag">Nome
-								<span class="dropup" th:remove="${pagina.descendente('nome')} ? tag"
-									th:if="${pagina.ordenada('nome')}">
-									<span class="caret"></span>
-								</span>
-							</a>
+							<brewer:order page="${pagina}" field="nome" text="Nome"/>
 						</th>
 						<th class="table-cervejas-col-estilo">Estilo</th>
 						<th class="table-cervejas-col-origem">Origem</th>

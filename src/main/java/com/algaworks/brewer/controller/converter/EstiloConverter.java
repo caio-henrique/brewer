@@ -11,6 +11,7 @@ public class EstiloConverter implements Converter<String, Estilo> {
 	public Estilo convert(String codigo) {
 		
 		if (!StringUtils.isEmpty(codigo)) {
+			
 			Estilo estilo = new Estilo();
 			estilo.setCodigo(Long.valueOf(codigo));
 			return estilo;
