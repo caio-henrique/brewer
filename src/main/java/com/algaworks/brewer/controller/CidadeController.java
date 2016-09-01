@@ -2,16 +2,30 @@ package com.algaworks.brewer.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.algaworks.brewer.model.Cerveja;
+import com.algaworks.brewer.controller.page.PageWrapper;
 import com.algaworks.brewer.model.Cidade;
 import com.algaworks.brewer.repository.Cidades;
+import com.algaworks.brewer.repository.Estados;
+import com.algaworks.brewer.repository.filter.CidadeFilter;
+import com.algaworks.brewer.service.CidadeService;
+import com.algaworks.brewer.service.exception.NomeCidadeJaCadastradaException;
 
 @Controller
 @RequestMapping("/cidades")
@@ -19,11 +33,20 @@ public class CidadeController {
 	
 	@Autowired
 	private Cidades cidades;
-
-	@RequestMapping(value = "/novo")
-	public String novo(Cerveja cerveja){
 	
-		return "cidade/CadastroCidade";
+	@Autowired
+	private Estados estados;
+	
+	@Autowired
+	private CidadeService cadastroCidadeService;
+
+	@RequestMapping("/nova")
+	public ModelAndView nova(Cidade cidade) {
+		
+		ModelAndView mv = new ModelAndView("cidade/CadastroCidade");
+		mv.addObject("estados", estados.findAll());
+		
+		return mv;
 	}
 	
 	@RequestMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -37,5 +60,41 @@ public class CidadeController {
 		catch (InterruptedException e) {	}
 		
 		return this.cidades.findByEstadoCodigo(codigoEstado);
+	}
+	
+	@PostMapping("/nova")
+	public ModelAndView salvar(@Valid Cidade cidade, BindingResult result, RedirectAttributes attributes) {
+		
+		if (result.hasErrors()) {
+			
+			return nova(cidade);
+		}
+		
+		try {
+			
+			this.cadastroCidadeService.salvar(cidade);
+		} 
+		
+		catch (NomeCidadeJaCadastradaException e) {
+			
+			result.rejectValue("nome", e.getMessage(), e.getMessage());
+			return nova(cidade);
+		}
+		
+		attributes.addFlashAttribute("mensagem", "Cidade salva com sucesso!");
+		return new ModelAndView("redirect:/cidades/nova");
+	}
+	
+	@GetMapping
+	public ModelAndView pesquisar(CidadeFilter cidadeFilter, BindingResult result, 
+			@PageableDefault(size = 10) Pageable pageable, HttpServletRequest httpServletRequest) {
+		
+		ModelAndView modelAndView = new ModelAndView("cidade/PesquisaCidades");
+		modelAndView.addObject("estados", estados.findAll());
+		
+		PageWrapper<Cidade> paginaWrapper = new PageWrapper<>(cidades.filtrar(cidadeFilter, pageable), httpServletRequest);
+		modelAndView.addObject("pagina", paginaWrapper);
+		
+		return modelAndView;
 	}
 }
